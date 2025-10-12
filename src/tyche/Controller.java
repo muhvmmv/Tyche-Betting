@@ -63,4 +63,6 @@ public class Controller {
         String password = loginPassword.getText();
         System.out.println("Login: " + email + ", " + password);
     }
+
 }
+//Mamman was here working HARD.
