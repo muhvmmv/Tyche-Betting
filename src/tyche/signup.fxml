@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="tyche.Controller" styleClass="root">
+    <HBox alignment="CENTER">
+        <Region HBox.hgrow="ALWAYS"/>
+        <VBox spacing="12" maxWidth="380" alignment="TOP_CENTER" styleClass="card">
+
+            <!-- Header -->
+            <VBox spacing="4" alignment="CENTER">
+                <Label text="🏆 Tyche" styleClass="logo"/>
+                <Label text="Welcome Back" styleClass="welcome"/>
+                <Label text="Sign in to start betting" styleClass="subtitle"/>
+            </VBox>
+
+            <!-- Toggle -->
+            <HBox spacing="0" alignment="CENTER" maxWidth="320" styleClass="toggle-bar">
+                <ToggleButton fx:id="loginToggle" text="Login"/>
+                <ToggleButton fx:id="signupToggle" text="Sign Up"/>
+            </HBox>
+
+            <!-- Forms container -->
+            <StackPane maxWidth="360">
+
+                <!-- Signup Form -->
+                <VBox fx:id="signupForm" spacing="10" alignment="CENTER_LEFT" styleClass="inner-card">
+                    <Label text="Create Account" styleClass="form-title"/>
+                    <Label text="Sign up to start your betting journey" styleClass="form-desc"/>
+
+                    <Label text="Full Name"/>
+                    <TextField fx:id="signupFullName" promptText="John Doe" styleClass="field"/>
+
+                    <Label text="Email"/>
+                    <TextField fx:id="signupEmail" promptText="your@email.com" styleClass="field"/>
+
+                    <Label text="Password"/>
+                    <PasswordField fx:id="signupPassword" promptText="••••••" styleClass="field"/>
+
+                    <Button fx:id="signupButton" text="Create Account" maxWidth="Infinity" styleClass="create-btn"/>
+                </VBox>
+
+                <!-- Login Form -->
+                <VBox fx:id="loginForm" spacing="10" alignment="CENTER_LEFT" styleClass="inner-card">
+                    <Label text="Login" styleClass="form-title"/>
+                    <Label text="Enter your credentials" styleClass="form-desc"/>
+
+                    <Label text="Email"/>
+                    <TextField fx:id="loginEmail" promptText="your@email.com" styleClass="field"/>
+
+                    <Label text="Password"/>
+                    <PasswordField fx:id="loginPassword" promptText="••••••" styleClass="field"/>
+
+                    <Button fx:id="loginButton" text="Login" maxWidth="Infinity" styleClass="create-btn"/>
+                </VBox>
+
+            </StackPane>
+
+        </VBox>
+    </HBox>
+</StackPane>

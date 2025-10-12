@@ -1,0 +1,114 @@
+/* Global root */
+.root {
+    -fx-background-color: #111111;
+    -fx-font-family: "Segoe UI", "Roboto", "Arial";
+}
+
+/* Card (outer area holding everything) */
+.card {
+    -fx-alignment: top-center;
+    -fx-spacing: 12;
+    -fx-padding: 18;
+    -fx-background-color: transparent;
+}
+
+/* Logo and title */
+.logo {
+    -fx-font-size: 20px;
+    -fx-text-fill: #ff8a00; /* orange */
+    -fx-font-weight: bold;
+}
+
+.welcome {
+    -fx-font-size: 18px;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-padding: 6 0 0 0;
+}
+
+.subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9d9d9d;
+}
+
+/* Toggle bar */
+.toggle-bar {
+    -fx-background-radius: 8;
+    -fx-padding: 4;
+    -fx-background-color: rgba(255,255,255,0.03);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 6, 0, 0, 2);
+}
+
+.toggle-bar ToggleButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: #bfbfbf;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+    -fx-pref-width: 160;
+    -fx-pref-height: 28;
+}
+
+.toggle-bar ToggleButton:selected {
+    -fx-background-color: linear-gradient(#ff8a00, #ff7a00);
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+}
+
+/* Inner form card */
+.inner-card {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    -fx-background-radius: 10;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0, 0, 6);
+}
+
+/* Form headings */
+.form-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+
+.form-desc {
+    -fx-text-fill: #9d9d9d;
+    -fx-font-size: 11px;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Labels inside the form: slightly muted */
+.inner-card Label {
+    -fx-text-fill: #bdbdbd;
+    -fx-font-size: 11px;
+    -fx-padding: 4 0 4 0;
+}
+
+/* Input fields */
+.field {
+    -fx-background-color: rgba(0,0,0,0.5);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #6f6f6f;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 8;
+    -fx-border-color: rgba(255,255,255,0.03);
+}
+
+/* Create/Login button */
+.create-btn {
+    -fx-background-color: linear-gradient(#ff8a00, #ff7a00);
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 10 12 10 12;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+/* Make labels inside the card centered as appropriate */
+.card .welcome, .card .subtitle {
+    -fx-alignment: center;
+}
+
+/* Responsive-ish: limit widths */
+.inner-card {
+    -fx-max-width: 360;
+}
