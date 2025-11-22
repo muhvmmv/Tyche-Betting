@@ -22,6 +22,10 @@ const LIVE_STATUSES = [
   "LIVE",
 ];
 
+// New: explicitly mark finished & upcoming-only statuses
+const FINISHED_STATUSES = ["FT", "AET", "PEN", "CANC", "ABD", "AWD", "WO"];
+const UPCOMING_STATUSES = ["NS", "TBD", "PST"];
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -120,9 +124,26 @@ serve(async (req) => {
 
     console.log(`Unique fixtures after dedupe: ${uniqueFixtures.length}`);
 
-    // Identify live fixtures
-    const liveFixtures = uniqueFixtures.filter((f: any) =>
-      LIVE_STATUSES.includes(f.fixture?.status?.short)
+    // 🔹 New: filter out finished matches completely.
+    // Only keep live or truly upcoming fixtures.
+    const filteredFixtures = uniqueFixtures.filter((f: any) => {
+      const st = f.fixture?.status?.short as string | undefined;
+      if (!st) return false;
+
+      if (FINISHED_STATUSES.includes(st)) {
+        // Finished or cancelled → ignore
+        return false;
+      }
+
+      // Keep if live or not-started/scheduled
+      return LIVE_STATUSES.includes(st) || UPCOMING_STATUSES.includes(st);
+    });
+
+    console.log(`Fixtures after filtering live + upcoming only: ${filteredFixtures.length}`);
+
+    // Identify live fixtures (from filtered list)
+    const liveFixtures = filteredFixtures.filter((f: any) =>
+      LIVE_STATUSES.includes(f.fixture?.status?.short),
     );
 
     console.log(`Live fixtures: ${liveFixtures.length}`);
@@ -170,47 +191,67 @@ serve(async (req) => {
         .map((o) => [o.fixtureId as number, o.odds]),
     );
 
-    // Process fixtures and attach odds (live odds where available, random for others)
-    const processedFixtures = uniqueFixtures.map((fixture: any) => {
+    // Helper to generate realistic random odds
+    function generateRandomOdds() {
+      let homeOdds = 2.0;
+      let drawOdds = 3.2;
+      let awayOdds = 3.5;
+
+      const rand = Math.random();
+      if (rand < 0.33) {
+        homeOdds = 1.6 + Math.random() * 0.8;
+        drawOdds = 3.4 + Math.random() * 0.8;
+        awayOdds = 4.5 + Math.random() * 2.5;
+      } else if (rand < 0.66) {
+        homeOdds = 2.4 + Math.random() * 1.0;
+        drawOdds = 3.1 + Math.random() * 0.6;
+        awayOdds = 2.7 + Math.random() * 1.0;
+      } else {
+        homeOdds = 4.5 + Math.random() * 2.5;
+        drawOdds = 3.4 + Math.random() * 0.8;
+        awayOdds = 1.6 + Math.random() * 0.8;
+      }
+
+      return { homeOdds, drawOdds, awayOdds };
+    }
+
+    // Process fixtures and attach odds (live odds where available, random otherwise)
+    const processedFixtures = filteredFixtures.map((fixture: any) => {
       const fixtureId = fixture.fixture?.id as number | undefined;
       const homeTeam = fixture.teams?.home?.name || "Home";
       const awayTeam = fixture.teams?.away?.name || "Away";
       const statusShort = fixture.fixture?.status?.short;
       const isLive = LIVE_STATUSES.includes(statusShort);
 
-      let homeOdds = 2.0;
-      let drawOdds = 3.2;
-      let awayOdds = 3.5;
+      let homeOdds: number;
+      let drawOdds: number;
+      let awayOdds: number;
 
-      if (isLive && fixtureId && oddsMap.has(fixtureId)) {
-        const liveOdds = oddsMap.get(fixtureId);
-        if (liveOdds && liveOdds.length >= 3) {
-          homeOdds = parseFloat(
-            liveOdds.find((o: any) => o.value === "Home")?.odd || homeOdds,
-          );
-          drawOdds = parseFloat(
-            liveOdds.find((o: any) => o.value === "Draw")?.odd || drawOdds,
-          );
-          awayOdds = parseFloat(
-            liveOdds.find((o: any) => o.value === "Away")?.odd || awayOdds,
-          );
+      if (isLive) {
+        // If live and API returned odds → use them
+        if (fixtureId && oddsMap.has(fixtureId)) {
+          const liveOdds = oddsMap.get(fixtureId);
+          if (liveOdds && liveOdds.length >= 3) {
+            homeOdds = parseFloat(
+              liveOdds.find((o: any) => o.value === "Home")?.odd ?? "2.0",
+            );
+            drawOdds = parseFloat(
+              liveOdds.find((o: any) => o.value === "Draw")?.odd ?? "3.2",
+            );
+            awayOdds = parseFloat(
+              liveOdds.find((o: any) => o.value === "Away")?.odd ?? "3.5",
+            );
+          } else {
+            // no usable odds → random
+            ({ homeOdds, drawOdds, awayOdds } = generateRandomOdds());
+          }
+        } else {
+          // live but no odds in API → random so they are not all 2.00 / 3.20 / 3.50
+          ({ homeOdds, drawOdds, awayOdds } = generateRandomOdds());
         }
       } else {
-        // Generate realistic pre-match odds (still random but shaped)
-        const rand = Math.random();
-        if (rand < 0.33) {
-          homeOdds = 1.6 + Math.random() * 0.8;
-          drawOdds = 3.4 + Math.random() * 0.8;
-          awayOdds = 4.5 + Math.random() * 2.5;
-        } else if (rand < 0.66) {
-          homeOdds = 2.4 + Math.random() * 1.0;
-          drawOdds = 3.1 + Math.random() * 0.6;
-          awayOdds = 2.7 + Math.random() * 1.0;
-        } else {
-          homeOdds = 4.5 + Math.random() * 2.5;
-          drawOdds = 3.4 + Math.random() * 0.8;
-          awayOdds = 1.6 + Math.random() * 0.8;
-        }
+        // not live → pre-match random odds
+        ({ homeOdds, drawOdds, awayOdds } = generateRandomOdds());
       }
 
       const matchDate = new Date(fixture.fixture?.date);
