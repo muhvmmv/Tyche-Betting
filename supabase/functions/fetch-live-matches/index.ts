@@ -19,10 +19,9 @@ serve(async (req) => {
     console.log('API Keys configured:', { football: !!apiFootballKey, odds: !!oddsApiKey });
 
     let liveMatches = [];
-
     if (apiFootballKey) {
       try {
-        // Top league IDs
+        // Top league ID
         const topLeagues = [
           { id: 39, name: 'Premier League' },
           { id: 140, name: 'La Liga' },

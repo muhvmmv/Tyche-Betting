@@ -22,7 +22,7 @@ const LIVE_STATUSES = [
   "LIVE",
 ];
 
-// New: explicitly mark finished & upcoming-only statuses
+// New: expliitly mark finished & upcoming-only statuses
 const FINISHED_STATUSES = ["FT", "AET", "PEN", "CANC", "ABD", "AWD", "WO"];
 const UPCOMING_STATUSES = ["NS", "TBD", "PST"];
 

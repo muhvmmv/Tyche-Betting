@@ -1,4 +1,4 @@
--- Fix function search path - drop trigger first
+-- Fix function search path  drop trigger first
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.create_user_wallet();
 

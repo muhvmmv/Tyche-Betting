@@ -23,7 +23,7 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    // get and verify user from bearer token
+    // get and verify user from bearer toke
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       throw new Error("Missing Authorization header");
