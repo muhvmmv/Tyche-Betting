@@ -7,7 +7,7 @@ CREATE TABLE public.user_wallets (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
--- Create bets table
+-- Create bets tabl
 CREATE TABLE public.bets (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
