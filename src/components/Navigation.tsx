@@ -28,6 +28,7 @@ export const Navigation = () => {
     setTimeout(() => setRefreshing(false), 500);
   };
 
+  // Navigation Component
   return (
     <nav className="bg-card border-b border-border">
       <div className="container mx-auto px-4">

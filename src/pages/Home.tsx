@@ -19,7 +19,7 @@ interface Bet {
   odds: number;
   stake: number;
 }
-
+// Home Page Component
 const Home = () => {
   const [bets, setBets] = useState<Bet[]>([]);
   const [showBettingSlip, setShowBettingSlip] = useState(false);
