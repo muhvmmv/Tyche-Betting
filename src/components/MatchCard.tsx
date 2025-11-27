@@ -2,6 +2,7 @@ import { Clock, TrendingUp } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
+// Props for MatchCard component
 interface MatchCardProps {
   league: string;
   homeTeam: string;
@@ -18,7 +19,7 @@ interface MatchCardProps {
   awayScore?: number;
   onAddToBetSlip?: (team: string, odds: number) => void;
 }
-
+// MatchCard component displays information about a sports match and betting options
 export const MatchCard = ({
   league,
   homeTeam,

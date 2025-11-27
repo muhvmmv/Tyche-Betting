@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+// Bet interface representing the structure of a bet record
 interface Bet {
   id: string;
   league: string;
@@ -20,18 +21,21 @@ interface Bet {
   placed_at: string;
 }
 
+// CurrentBets component displays the user's active and settled bets
 const CurrentBets = () => {
   const { user } = useAuth();
   const [activeBets, setActiveBets] = useState<Bet[]>([]);
   const [settledBets, setSettledBets] = useState<Bet[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetches bets when the component mounts or when the user changes
   useEffect(() => {
     if (user) {
       fetchBets();
     }
   }, [user]);
 
+  // Fetches bets from the database for the current user
   const fetchBets = async () => {
     try {
       setLoading(true);
@@ -41,8 +45,10 @@ const CurrentBets = () => {
         .eq("user_id", user?.id)
         .order("placed_at", { ascending: false });
 
+      // Handles any errors during the fetch  
       if (error) throw error;
 
+      // Separates bets into active and settled based on their status
       if (data) {
         setActiveBets(data.filter((bet) => bet.status === "pending"));
         setSettledBets(data.filter((bet) => bet.status !== "pending"));
@@ -54,6 +60,7 @@ const CurrentBets = () => {
     }
   };
 
+  // Returns the appropriate icon based on the bet status
   const getBetStatusIcon = (status: string) => {
     switch (status) {
       case "won":
@@ -65,6 +72,7 @@ const CurrentBets = () => {
     }
   };
 
+  // Returns the appropriate badge based on the bet status
   const getBetStatusBadge = (status: string) => {
     switch (status) {
       case "won":
@@ -76,6 +84,7 @@ const CurrentBets = () => {
     }
   };
 
+  // Renders loading state if bets are being fetched
   if (loading) {
     return (
       <ProtectedRoute>
@@ -91,6 +100,7 @@ const CurrentBets = () => {
     );
   }
 
+  // Renders the CurrentBets component with active and settled bets
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background">
