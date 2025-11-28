@@ -16,7 +16,7 @@ serve(async (req) => {
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? ""
   );
-
+//
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {

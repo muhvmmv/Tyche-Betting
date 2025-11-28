@@ -5,30 +5,35 @@ import { useAuth } from "@/contexts/AuthContext";
 import { DepositDialog } from "./DepositDialog";
 import { useState } from "react";
 
+
+// Navigation component providing site-wide navigation and user actions
 export const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, balance, signOut, refreshBalance } = useAuth();
   const [refreshing, setRefreshing] = useState(false);
 
+  // Defines the main navigation links
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Current Bets", path: "/bets" },
     { name: "Dashboard", path: "/dashboard" },
   ];
 
+  // Handles user sign-out and redirects to home
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
 
+  // Refreshes user balance from backend
   const handleRefresh = async () => {
     setRefreshing(true);
     await refreshBalance();
     setTimeout(() => setRefreshing(false), 500);
   };
 
-  // Navigation Component
+  // Renders the navigation bar with links and user actions
   return (
     <nav className="bg-card border-b border-border">
       <div className="container mx-auto px-4">

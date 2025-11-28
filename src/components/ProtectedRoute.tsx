@@ -2,14 +2,17 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
+// Props for ProtectedRoute component
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
+// ProtectedRoute component to guard routes that require authentication
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Redirects to auth page if user is not authenticated
   useEffect(() => {
     if (!loading && !user) {
       navigate("/auth");

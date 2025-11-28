@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useState } from "react";
 
+// Bet interface defines the structure of each bet added to the slip
 interface Bet {
   id: string;
   league: string;
@@ -12,6 +13,7 @@ interface Bet {
   stake: number;
 }
 
+// Props for the BettingSlip component, containing state handlers
 interface BettingSlipProps {
   bets: Bet[];
   onRemoveBet: (id: string) => void;
@@ -20,6 +22,7 @@ interface BettingSlipProps {
   onPlaceBet: () => void;
 }
 
+// Betting slip component responsible for showing selected bets and totals
 export const BettingSlip = ({
   bets,
   onRemoveBet,
@@ -31,6 +34,7 @@ export const BettingSlip = ({
   const totalOdds = bets.reduce((product, bet) => product * bet.odds, 1);
   const potentialWin = totalStake * totalOdds;
 
+  // Renders the betting slip UI with bet details and action buttons
   return (
     <div className="bg-card border border-border rounded-lg p-4 sticky top-4">
       <div className="flex items-center justify-between mb-4">
