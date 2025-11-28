@@ -3,18 +3,12 @@ import { Navigation } from "@/components/Navigation";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { TrendingUp, DollarSign, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-
 interface Withdrawal {
   id: string;
   amount: number;
@@ -24,6 +18,7 @@ interface Withdrawal {
   processed_at?: string | null;
 }
 
+// Dashboard component displays user betting statistics and allows withdrawals
 const Dashboard = () => {
   const { user, balance, refreshBalance } = useAuth();
   const { toast } = useToast();
@@ -39,6 +34,7 @@ const Dashboard = () => {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawLoading, setWithdrawLoading] = useState(false);
 
+  // Fetches user betting statistics and withdrawal history on component mount or user change
   useEffect(() => {
     if (user) {
       fetchStats();
@@ -46,6 +42,7 @@ const Dashboard = () => {
     }
   }, [user]);
 
+  // Fetches user betting statistics from the database
   const fetchStats = async () => {
     try {
       const { data: bets, error } = await supabase
@@ -73,6 +70,7 @@ const Dashboard = () => {
     }
   };
 
+  // Fetches the user's withdrawal history
   const fetchWithdrawals = async () => {
     if (!user) return;
 
@@ -99,6 +97,7 @@ const Dashboard = () => {
     }
   };
 
+  // Handles withdrawal form submission
   const handleWithdrawSubmit = async () => {
     if (!user) {
       toast({
@@ -111,6 +110,7 @@ const Dashboard = () => {
 
     const value = Number(withdrawAmount);
 
+    // Validate withdrawal amount
     if (!value || value <= 0) {
       toast({
         title: "Invalid amount",
@@ -120,6 +120,7 @@ const Dashboard = () => {
       return;
     }
 
+    // Check for sufficient balance
     if (value > balance) {
       toast({
         title: "Insufficient balance",
@@ -132,6 +133,7 @@ const Dashboard = () => {
     try {
       setWithdrawLoading(true);
 
+      // Invoke Supabase function to request withdrawal
       const { data, error } = await supabase.functions.invoke(
         "request-withdrawal",
         {
@@ -139,6 +141,7 @@ const Dashboard = () => {
         },
       );
 
+      // Handle errors from the withdrawal request
       if (error || !data?.success) {
         console.error("Withdrawal error:", error ?? data?.error);
         toast({
@@ -149,6 +152,7 @@ const Dashboard = () => {
         return;
       }
 
+      // Notify user of successful withdrawal request
       toast({
         title: "Withdrawal requested",
         description: `A request for $${value.toFixed(
@@ -156,9 +160,11 @@ const Dashboard = () => {
         )} has been created and will be processed by admin`,
       });
 
+      // Reset form
       setWithdrawAmount("");
       setWithdrawOpen(false);
 
+      // Refresh balance and withdrawals list
       await refreshBalance();
       await fetchWithdrawals();
     } catch (error) {
@@ -173,6 +179,7 @@ const Dashboard = () => {
     }
   };
 
+  // Renders the Dashboard component with user stats and withdrawal functionality
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background">
