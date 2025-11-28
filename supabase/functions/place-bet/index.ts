@@ -36,7 +36,7 @@ serve(async (req) => {
       throw new Error("No bets provided");
     }
 
-    // Calculate total stake
+    // Calculate total stak
     const totalStake = bets.reduce(
       (sum: number, bet: any) => sum + Number(bet.stake || 0),
       0,

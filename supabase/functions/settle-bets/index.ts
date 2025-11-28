@@ -12,7 +12,7 @@ serve(async () => {
   try {
     console.log("Starting bet settlement...");
 
-    // 1. Get all pending bets
+    // 1. Get all pending bet
     const { data: pendingBets, error: betsError } = await supabase
       .from("bets")
       .select("*")

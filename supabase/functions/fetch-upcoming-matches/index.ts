@@ -22,7 +22,7 @@ serve(async (req) => {
 
     if (apiFootballKey) {
       try {
-        // Top league IDs
+        // Top league ID
         const topLeagues = [
           { id: 39, name: 'Premier League', season: 2024 },
           { id: 140, name: 'La Liga', season: 2024 },
