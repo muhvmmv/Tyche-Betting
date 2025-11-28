@@ -7,14 +7,17 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+// UpdatePassword component allows users to set a new password
 const UpdatePassword = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Toast notification hook
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Handles password update form submission
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -64,6 +67,7 @@ const UpdatePassword = () => {
     }
   };
 
+  // Renders the password update form
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md p-6 space-y-6">

@@ -37,7 +37,7 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // Get current balance
+    // Get current balanc
     const { data: wallet } = await supabaseClient
       .from("user_wallets")
       .select("balance")

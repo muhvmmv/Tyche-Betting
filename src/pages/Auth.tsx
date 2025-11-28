@@ -7,13 +7,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 
+// Auth component handles user sign-in, sign-up, and password reset
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
@@ -28,10 +24,12 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Handles form submission for sign-in and sign-up
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    // Perform sign-up or sign-in based on current mode
     try {
       const { error } = isSignUp
         ? await signUp(email, password)
@@ -57,6 +55,7 @@ const Auth = () => {
     }
   };
 
+  // Handles sending password reset email
   const handleSendResetEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setResetLoading(true);
@@ -90,6 +89,7 @@ const Auth = () => {
     }
   };
 
+  // Renders the authentication form and reset password dialog
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">

@@ -20,6 +20,7 @@ interface Bet {
   stake: number;
 }
 
+// Home component displays live and upcoming matches and manages the betting slip
 const Home = () => {
   const [bets, setBets] = useState<Bet[]>([]);
   const [showBettingSlip, setShowBettingSlip] = useState(false);
@@ -38,6 +39,7 @@ const Home = () => {
     }
   }, [searchParams]);
 
+  // Handles deposit verification after redirect from payment gateway
   const handleDepositVerification = async (sessionId: string) => {
     try {
       console.log("Verifying deposit for session:", sessionId);
@@ -99,6 +101,7 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Fetches matches from Supabase function
   const fetchMatches = async () => {
     try {
       setLoading(true);
@@ -140,6 +143,7 @@ const Home = () => {
     }
   };
 
+  // Adds a selection to the betting slip
   const handleAddToBetSlip = (
     matchId: string,
     league: string,
@@ -158,10 +162,12 @@ const Home = () => {
       return;
     }
 
+    // Create a unique bet ID based on match and selection
     const match = `${homeTeam} vs ${awayTeam}`;
     const betId = `${matchId}-${selection}`;
     const existingBet = bets.find((bet) => bet.id === betId);
 
+    // Prevent duplicate bets in the slip
     if (existingBet) {
       toast({
         title: "Already added",
@@ -170,6 +176,7 @@ const Home = () => {
       return;
     }
 
+    // Create new bet object and add to bets state
     const newBet: Bet = {
       id: betId,
       league,
@@ -183,24 +190,29 @@ const Home = () => {
     setBets([...bets, newBet]);
     setShowBettingSlip(true);
 
+    // Notify user of successful addition
     toast({
       title: "Added to slip",
       description: `${selection} @ ${odds.toFixed(2)}`,
     });
   };
 
+  // Removes a bet from the betting slip by its ID
   const handleRemoveBet = (id: string) => {
     setBets(bets.filter((bet) => bet.id !== id));
   };
 
+  // Updates the stake for a specific bet in the betting slip
   const handleUpdateStake = (id: string, stake: number) => {
     setBets(bets.map((bet) => (bet.id === id ? { ...bet, stake } : bet)));
   };
 
+  // Clears all bets from the betting slip
   const handleClearAll = () => {
     setBets([]);
   };
 
+  // Handles placing the bet by invoking Supabase function
   const handlePlaceBet = async () => {
     if (!user) {
       toast({
@@ -226,6 +238,7 @@ const Home = () => {
         return;
       }
 
+      // Prepare bet data for submission
       const { data, error } = await supabase.functions.invoke("place-bet", {
         body: { bets },
       });
@@ -250,6 +263,7 @@ const Home = () => {
     }
   };
 
+  // Renders the Home component with match listings and betting slip
   return (
     <div className="min-h-screen bg-background">
       <Navigation />

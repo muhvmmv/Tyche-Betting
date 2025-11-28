@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,15 +7,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Wallet } from "lucide-react";
 
+// DepositDialog component allows users to deposit funds into their betting wallet
 export const DepositDialog = () => {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
+  // Handles deposit creation via Supabase function
   const handleDeposit = async () => {
     const depositAmount = parseFloat(amount);
 
+    // Validation: enforce minimum deposit value
     if (!depositAmount || depositAmount < 10) {
       toast({
         title: "Invalid amount",
@@ -48,12 +44,14 @@ export const DepositDialog = () => {
         return;
       }
 
+      // Invoke Supabase edge function to create deposit session
       const { data, error } = await supabase.functions.invoke("create-deposit", {
         body: { amount: depositAmount },
       });
 
       if (error) throw error;
 
+      // Redirect user to payment page
       if (data?.url) {
         window.open(data.url, "_blank");
         setOpen(false);
@@ -71,6 +69,7 @@ export const DepositDialog = () => {
     }
   };
 
+  // Renders the deposit dialog with input and action button
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
